@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Book List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .bookshelf {
+            background: linear-gradient(to bottom, #e8e0d0 0%, #e8e0d0 20px, #d8d0c0 20px, #d8d0c0 40px);
+            background-size: 100% 40px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .bookshelf::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 100%);
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .book {
+            transition: all 0.3s ease;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.2);
+            position: relative;
+            perspective: 1000px;
+        }
+        
+        .book:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 10px 15px 20px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        
+        .book-spine {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 15px;
+            background: rgba(0,0,0,0.1);
+            transform: rotateY(-20deg);
+            transform-origin: left center;
+        }
+        
+        .book-cover {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 2px 4px 4px 2px;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .book-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            z-index: 20;
+        }
+        
+        .book:hover .book-details {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #8b5a2b;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .active::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="bg-amber-900 text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <h1 class="title-font text-4xl md:text-5xl font-bold text-center">My Book List</h1>
+            <p class="text-center mt-2 text-amber-200">A visual catalog of my literary adventures</p>
+        </div>
+    </header>
+
+    <nav class="bg-amber-800 text-white sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <ul class="flex justify-center space-x-8">
+                <li><a href="#read" class="nav-link active py-2 px-1">Books I've Read</a></li>
+                <li><a href="#reading" class="nav-link py-2 px-1">Currently Reading</a></li>
+                <li><a href="#to-read" class="nav-link py-2 px-1">To Read</a></li>
+            </ul>
+        </div>
+    </nav>
+        <main class="container mx-auto px-4 py-12">
+        <!-- Introductory Paragraphs Section -->
+        <section class="py-12 px-6 md:px-16 lg:px-24">
+            <div class="max-w-5xl mx-auto text-lg leading-relaxed space-y-6">
+                <p>Over the past couple of months, I’ve found myself more and more inundated with university assignments and studying. Although I’m highly passionate and interested in the work I do as a computer science undergraduate, a lot of my time is often spent sitting in front of a computer in the library staring blankly at lines of code, an architectural diagram, or a word document. After all is said and done, I find myself exhausted on the train back home, usually long after the sun has set and Melbourne's night life starts to bustle.</p>
+                <p>Here, I stumble on the precipice between craving entertainment yet wanting something relaxing to wind down with. Unsurprisingly, a high-octane YouTube video or social media post didn’t hit the mark as it left me more drained than I already was. In fact, It didn’t occur to me until last year that a simple book fulfilled both those needs.</p>
+                <p>Thus started my unexpected fixation on reading!</p>
+            </div>
+        </section>
+
+        <!-- Books I've Read Section -->
+        <section id="read" class="my-10">
+            <div class="flex items-center mb-8">
+                <h2 class="title-font text-3xl font-bold text-amber-900">Books I've Read</h2>
+            </div>
+            
+            <div class="bookshelf p-6 mb-6">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 justify-items-center">
+                    <!-- Book 1 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://images.thenile.io/r1000/9781435159570.jpg" alt="Dracula" class="book-cover">
+                        <div class="status-badge bg-green-500">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">Dracula</h3>
+                            <p class="text-sm">Bram Stoker</p>
+                            <p class="text-xs mt-1">Finished: Aug 2024</p>
+                            <div class="flex mt-2">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 2 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://i.harperapps.com/hcanz/covers/9781460752678/y648.jpg" alt="The Anchoress" class="book-cover">
+                        <div class="status-badge bg-green-500">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">The Anchoress</h3>
+                            <p class="text-sm">Robyn Cadwallader</p>
+                            <p class="text-xs mt-1">Finished: Dec 2024</p>
+                            <div class="flex mt-2">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="far fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 3 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://m.media-amazon.com/images/I/71+2-t7M35L.jpg" alt="The Alchemist" class="book-cover">
+                        <div class="status-badge bg-green-500">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">The Alchemist</h3>
+                            <p class="text-sm">Paulo Coelho</p>
+                            <p class="text-xs mt-1">Finished: March 2025</p>
+                            <div class="flex mt-2">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="far fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </section>
+
+        <section class="py-12 px-6 md:px-16 lg:px-24">
+            <div class="max-w-5xl mx-auto text-lg leading-relaxed space-y-6">
+                <p>Although something I've heard time and time again, I didn't quite believe those who said that books held the power to immerse its readers in another world. I wanted to test this notion by starting off with a classic - Dracula. This turned out to be quite the rollercoaster than I initially anticipated. Despite being written nearly 130 years ago, its heartfelt characters and their camaraderie, the titular antagonist, as well as the haunting atmosphere made this read an unforgettable experience.</p>
+                <p>From there, I branched out to books I had read in the past but didn't quite enjoy to books recommended by friends. With each book, I find time passing by quickly than ever before, reducing my long train rides to what feels like a few minutes.</p>
+            </div>
+        </section>
+
+        <!-- Currently Reading Section -->
+        <section id="reading" class="mb-10">
+            <div class="flex items-center mb-8">
+                <h2 class="title-font text-3xl font-bold text-amber-900">Currently Reading</h2>
+            </div>
+            
+            <div class="bookshelf p-6 mb-6">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 justify-items-center">
+                    <!-- Book 1 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://m.media-amazon.com/images/I/61GaWVM6ZlL._AC_UF1000,1000_QL80_.jpg" alt="Fahrenheit 451" class="book-cover">
+                        <div class="status-badge bg-blue-500">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">Fahrenheit 451</h3>
+                            <p class="text-sm">Ray Bradbury</p>
+                            <p class="text-xs mt-1">Started: May 2025</p>
+                            <div class="flex items-center mt-2">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 50%"></div>
+                                </div>
+                                <span class="ml-2 text-xs">50%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 px-6 md:px-16 lg:px-24">
+            <div class="max-w-5xl mx-auto text-lg leading-relaxed space-y-6">
+                <p>By picking up reading as a hobby. I uncovered just how important it is in our current world to slow down and enjoy a slower paced activity. Although unfamiliar at first, I quickly found comfort sitting through a good book, no matter what genre it covers.</p>
+                <p>What started as a curiosity has quickly blossomed into a habit I genuinely value. I now look forward to sitting on those long rides to and from university so I can bury my head in the book I'm reading. More than anything, it has taught me how to enjoy the simpler things in life which is something up until last year, I didn't know I needed.</p>
+            </div>
+        </section>
+
+        <!-- To Read Section -->
+        <section id="to-read">
+            <div class="flex items-center mb-8">
+                <h2 class="title-font text-3xl font-bold text-amber-900">Books To Read</h2>
+            </div>
+            
+            <div class="bookshelf p-6 mb-6">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 justify-items-center">
+                    <!-- Book 1 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://m.media-amazon.com/images/I/81FIgyu7zuL.jpg" alt="David Attenborough's First Life" class="book-cover">
+                        <div class="status-badge bg-purple-500">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">David Attenborough's First Life</h3>
+                            <p class="text-sm">Matt Kaplan</p>
+                            <div class="mt-2">
+                                <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Non-fiction</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 2 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://m.media-amazon.com/images/I/71To88V1FAL.jpg" alt="Abundance" class="book-cover">
+                        <div class="status-badge bg-purple-500">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">Abundance</h3>
+                            <p class="text-sm">Ezra Klein & Derek Thompson</p>
+                            <div class="mt-2">
+                                <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Non-fiction</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 3 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://images.thenile.io/r1000/9781474605731.jpg" alt="Flowers for Algernon" class="book-cover">
+                        <div class="status-badge bg-purple-500">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">Flowers for Algernon</h3>
+                            <p class="text-sm">Daniel Keyes</p>
+                            <div class="mt-2">
+                                <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Sci-Fi</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 4 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://m.media-amazon.com/images/I/71W61hduyeL._UF894,1000_QL80_.jpg" alt="Addicted to the Monkey Mind" class="book-cover">
+                        <div class="status-badge bg-purple-500">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">Addicted to the Monkey Mind</h3>
+                            <p class="text-sm">J. F. Benoist</p>
+                            <div class="mt-2">
+                                <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Self help</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book 5 -->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://m.media-amazon.com/images/I/81YW99XIpJL._UF894,1000_QL80_.jpg" alt="The Girl with the Dragon Tattoo" class="book-cover">
+                        <div class="status-badge bg-purple-500">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">The Girl with the Dragon Tattoo</h3>
+                            <p class="text-sm">Stieg Larsson</p>
+                            <div class="mt-2">
+                                <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Mystery</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 6-->
+                    <div class="book h-64 w-44 relative cursor-pointer">
+                        <div class="book-spine"></div>
+                        <img src="https://m.media-amazon.com/images/I/916bFCWrNGL.jpg" alt="The Pantomime Life of Joseph Grimaldi" class="book-cover">
+                        <div class="status-badge bg-purple-500">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                        <div class="book-details">
+                            <h3 class="font-bold">The Pantomime Life of Joseph Grimaldi</h3>
+                            <p class="text-sm">Andrew McConnell Stott</p>
+                            <div class="mt-2">
+                                <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Biography</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-amber-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h2 class="title-font text-2xl font-bold">My Book List</h2>
+                    <p class="text-amber-200">Tracking my literary adventures one book at a time</p>
+                </div>
+            </div>
+            <div class="border-t border-amber-800 mt-6 pt-6 text-center text-sm text-amber-200">
+                <p>© 2025 My Book List. All book covers are property of their respective publishers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Highlight current section in nav while scrolling
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === #${current}) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Book hover effect enhancement
+        document.querySelectorAll('.book').forEach(book => {
+            book.addEventListener('mouseenter', function() {
+                this.style.zIndex = '100';
+            });
+            
+            book.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+    </script>
+</body>
+</html>
